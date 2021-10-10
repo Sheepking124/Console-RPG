@@ -1,0 +1,1564 @@
+#Imports
+import random
+import time
+
+def makeboldedtext(boldtext):
+    boldtext = "\033[1m" + str(boldtext) + "\033[0m"
+    return boldtext
+
+def is_number(s):
+    try:
+        float(s)
+        return True
+    except ValueError:
+        pass
+ 
+    try:
+        import unicodedata
+        unicodedata.numeric(s)
+        return True
+    except (TypeError, ValueError):
+        pass
+
+def addspacer():
+   print("<------------------->") 
+
+def IndentAway():
+    print("\n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n ")
+
+#Makes a spacer to stat
+print("<------------------------------------------------>")
+
+def BossGoblinDisplay():
+    print('''
+    ▀█████████▄   ▄██████▄     ▄████████    ▄████████         ▄██████▄   ▄██████▄  ▀█████████▄   ▄█        ▄█  ███▄▄▄▄   
+      ███    ███ ███    ███   ███    ███   ███    ███        ███    ███ ███    ███   ███    ███ ███       ███  ███▀▀▀██▄ 
+      ███    ███ ███    ███   ███    █▀    ███    █▀         ███    █▀  ███    ███   ███    ███ ███       ███▌ ███   ███ 
+     ▄███▄▄▄██▀  ███    ███   ███          ███              ▄███        ███    ███  ▄███▄▄▄██▀  ███       ███▌ ███   ███ 
+    ▀▀███▀▀▀██▄  ███    ███ ▀███████████ ▀███████████      ▀▀███ ████▄  ███    ███ ▀▀███▀▀▀██▄  ███       ███▌ ███   ███ 
+      ███    ██▄ ███    ███          ███          ███        ███    ███ ███    ███   ███    ██▄ ███       ███  ███   ███ 
+      ███    ███ ███    ███    ▄█    ███    ▄█    ███        ███    ███ ███    ███   ███    ███ ███▌    ▄ ███  ███   ███ 
+    ▄█████████▀   ▀██████▀   ▄████████▀   ▄████████▀         ████████▀   ▀██████▀  ▄█████████▀  █████▄▄██ █▀    ▀█   █▀  
+                                                                                            ▀                        ''')
+
+def AnyButtonToContinue(Msg):
+    ContInput = raw_input(Msg)
+
+    if ContInput:
+        return True
+    else:
+        return True
+
+
+#Main Player variables
+PlayerName = "Null"
+PlayerLocation = "grain town"
+
+MaxPlayerHealth = 100
+PlayerHealth = 100
+PlayerHealAmnt = 13
+PlayerHealItems = 0
+PlayerCoinAmnt = 1220
+
+PlayerMainWeapon = "starter sword"
+
+#Player Armor
+PlayerArmor = {
+    "Helmet" : None,
+    "Chestplate" : None,
+    "Leggings" : None,
+    "Boots" : None
+}
+
+PlayerInventory = {
+    "grain" : {"SellPrice" : 7, "Amount" : 30},
+    "rock" : {"SellPrice" : 6, "Amount" : 10},
+    "stone sword" : {"SellPrice" : 65, "Amount" : 5, "Equippable" : True, "Weapon" : True}
+}
+
+#locations
+Locations = {
+    "grain town" : {"shop" : [], "farm" : "ye" }
+}
+
+CraftingRecipies = {
+    "bread" : {"grain" : 3},
+    "stone sword" : {"rock" : 5, "wood" : 2}
+}
+
+CraftingItemDescriptions = {
+    "bread" : "Just some regular bread, heals health when consumed",
+    "stone sword" : "A slightly better sword, made out of stone!"
+}
+
+ConsumableItems = {
+    "bread" : {"HealAmnt" : 8}
+}
+
+PresetItems = {
+    #Misc
+    "grain" : {"SellPrice" : 7, "Amount" : 1},
+    "wood" : {"SellPrice" : 9, "Amount" : 1},
+    "rock" : {"SellPrice" : 6, "Amount" : 1},
+
+    #Armor
+    "trashed helmet" : {"SellPrice" : 65, "Amount" : 1, "Equippable" : True, "Armor" : True, "Helmet" : True},
+    "basic goblin boots" : {"SellPrice" : 115, "Amount" : 1, "Equippable" : True, "Armor" : True, "Boots" : True},
+    "weathered chestplate" : {"SellPrice" : 400, "Amount" : 1, "Equippable" : True, "Armor" : True, "Chestplate" : True},
+
+    #Weapons
+    "basic sword" : {"SellPrice" : 85, "Amount" : 1, "Equippable" : True, "Weapon" : True},
+    "starter sword" : {"SellPrice" : 7, "Amount" : 1, "Equippable" : True, "Weapon" : True},
+    "stone sword" : {"SellPrice" : 65, "Amount" : 1, "Equippable" : True, "Weapon" : True},
+    "basic troll axe" : {"SellPrice" : 145, "Amount" : 1, "Equippable" : True, "Weapon" : True},
+
+    #Items
+    "goblin purse" : {"SellPrice" : 185, "Amount" : 1},
+    "bread" : {"SellPrice" : 25, "Amount" : 1}
+}
+
+#weapons
+Weapons = {
+    "starter sword" : {"Damage" : 10},
+    "basic sword" : {"Damage" : 16},
+    "basic troll axe" : {"Damage" : 21},
+    "stone sword" : {"Damage" : 13}
+}
+
+#armor
+Armor = {
+    "trashed helmet" : {"Reduce" : 2},
+    "basic goblin boots" : {"Reduce" : 4},
+    "weathered chestplate" : {"Reduce" : 4},
+    "zeus boots" : {"Reduce" : 105}
+}
+
+#Shops
+GrainTownShop = {
+"basic sword" : {"Description" : "A basic sword made of a polished rock", "BuyPrice" : 250, "Amount" : 1},
+"grain" : {"Description" : "Some grains harvested from this very town", "BuyPrice" : 9, "Amount" : 42},
+"wood" : {"Description" : "Wood chooped from a local tree", "BuyPrice" : 13, "Amount" : 29},
+"trashed helmet" : {"Description" : "A low-quality helmet, at least its something though. Reduces 3 damage when hit.", "BuyPrice" : 155, "Amount" : 1}
+}
+
+#--<Quests>--#
+GrainTownQuest1Completed = False
+
+GrainTownQuest2Part1Complete = False
+GrainTownQuest2Complete = False
+
+GrainTownQuest3Part1Complete = False
+GrainTownQuest3Complete = False
+
+def Play_Grain_Town_Quest_1():
+    global PlayerHealItems
+
+    IndentAway()
+    print("You wander through the town, and you turn into a path")
+    time.sleep(2)
+
+    print("As you are walking down, you see a woman run up to you")
+    time.sleep(2)
+
+    print("she is yelling something that you cannot understand, but as you get closer, her voice becomes more clear.")
+    time.sleep(3.25)
+    addspacer()
+
+    print(makeboldedtext("Lady:") + " Help! Help! The goblins are chasing me! Please fight them off!")
+    time.sleep(2.25)
+    
+    print(makeboldedtext(PlayerName) + ": Ok, i'll fight them off for you.")
+    time.sleep(2.5)
+
+    print(makeboldedtext("Lady:") + "  Here, take these, you might need them.")
+    time.sleep(1.5)
+
+    print("<x7 " + makeboldedtext('"Healing Item "' + "Added to inventory>"))
+    PlayerHealItems += 7
+
+    time.sleep(1.5)
+    addspacer()
+
+    print("You see the goblins come closer")
+    time.sleep(0.75)
+    print("get ready to fight...")
+
+    time.sleep(4)
+
+    IndentAway()
+
+    MakeEnemy("Weak Goblin", 14, 5, 7, 1, {"DropCoins" : 18})
+    IndentAway()
+    print("Yourself: 1/3 down, one more to go")
+    time.sleep(2)
+
+    MakeEnemy("Goblin", 26, 9, 8, 2, {"DropCoins" : 34})
+    IndentAway()
+    print("Yourself: Two down! But this last one looks tough.")
+    time.sleep(3)
+
+
+    MakeEnemy("Buff Goblin", 43, 15, 9, 2, {"DropCoins" : 67})
+    IndentAway()
+    print(makeboldedtext(PlayerName) + ": I think thats all of them. Theyre gone now.")
+    time.sleep(2)
+
+    print(makeboldedtext("Lady:") + "  What? How did you kill them? YOU WERE SUPPOSED TO DIE")
+    time.sleep(2)
+
+    print(makeboldedtext(PlayerName) + ": What? Why do you want me to die?")
+    time.sleep(2)
+
+    print(makeboldedtext("Goblin disguised as a lady:") + " Im not a villager, IM A GOBLIN. AND YOU JUST MURDERED MY WHOLE FAIMLY!")
+    time.sleep(3.25)
+    print(makeboldedtext("Goblin disguised as a lady:") + " im not gonna let you live after this... prepare to die.")
+    time.sleep(4.5)
+
+    MakeEnemy("Goblin Disguised as Lady", 36, 13, 7, 4, {"DropCoins" : 14, "DropItems" : {"goblin purse" : 1} })
+    IndentAway()
+    print("Yourself: Wow, that was crazy.")
+    time.sleep(2)
+    print("Yourself: At least I got alot of coins, and this purse... I wonder how much I can sell it for")
+    time.sleep(3.5)
+
+    GrainTownQuest1Completed = True
+
+def Play_Grain_Town_Quest_2():
+    global PlayerName
+    global PlayerCoinAmnt
+    global GrainTownQuest2Part1Complete
+    global PlayerInventory
+    global GrainTownQuest2Complete
+    IndentAway()
+
+    if GrainTownQuest2Part1Complete != True:
+        print("You were walking through town")
+        time.sleep(1.5)
+        print("and you hear voices chattering")
+        time.sleep(1.75)
+        print("you come closer and you start to hear them more clear...")
+        time.sleep(2.75)
+        addspacer()
+
+        print(makeboldedtext("Mayor:") + " Our people are starving.. There's no way were going to be able to feed them")
+        time.sleep(2)
+        print(makeboldedtext("???:") + " What can we do? if the goblins keep stealing the grain, we won't be able to feed them")
+        time.sleep(2.25)
+        print(makeboldedtext("Mayor:") + " You're right, we need the grain goblins dead. But how?")
+        time.sleep(2)
+        print(makeboldedtext("???:") + " Maybe we can pay for each dead Grain Goblin broguht to us.")
+        time.sleep(2.25)
+        print(makeboldedtext("Mayor:") + " that may work, but I dont want to risk more people dead.")
+        time.sleep(3.5)
+        
+        addspacer()
+        print("You decide to step in and talk")
+
+        time.sleep(2)
+        addspacer()
+
+        print(makeboldedtext(PlayerName) + ": Is there any way I can help?")
+        time.sleep(2)
+
+        print(makeboldedtext("Mayor:") + " Oh, you scared me there")
+        time.sleep(2)
+
+        print(makeboldedtext("Mayor:") + " Maybe to help, you can bring us 35 grain, we should be able to feed some with that much.")
+        time.sleep(2.5)
+
+        print(makeboldedtext(PlayerName) + ": Ok, I can do that")
+        time.sleep(2)
+
+        print(makeboldedtext("Mayor:") + " Thank you so much! I'll make sure to pay you greatly")
+        time.sleep(2.5)
+
+        print(makeboldedtext("Mayor:") + " Wait a minute, those are grain goblins right there! Can you please go kill them for us?")
+        time.sleep(3.5)
+
+        print(makeboldedtext(PlayerName) + ": Sure, I'll do it")
+        time.sleep(2)
+        IndentAway()
+
+        print("4 Grain goblins coming...")
+        time.sleep(1.5)
+        print("Get ready to fight...")
+        time.sleep(2.5)
+
+        IndentAway()
+
+        MakeEnemy("Grain Goblin", random.randint(23,27), random.randint(20, 28), random.randint(5, 10), random.randint(0,1), {"DropCoins" : random.randint(10,25), "DropItems" : {"Grain" : random.randint(2,4) }} )
+
+        print("Yourself: Only 3 more")
+        time.sleep(2)
+
+        MakeEnemy("Grain Goblin", random.randint(23,27), random.randint(24, 28), random.randint(5, 10), random.randint(0,1), {"DropCoins" : random.randint(30,45), "DropItems" : {"Grain" : random.randint(2,4) }} )
+
+        print("Yourself: Only two more")
+        time.sleep(2)
+
+        MakeEnemy("Grain Goblin", random.randint(23,27), random.randint(24, 28), random.randint(5, 10), random.randint(0,1), {"DropCoins" : random.randint(20,35), "DropItems" : {"Grain" : random.randint(2,4) }} )
+
+        IndentAway()
+        print("Yourself: Only one more, he looks tough though.")
+        time.sleep(2)
+
+        MakeEnemy("Buff Grain Goblin", random.randint(20,26), random.randint(28, 32), random.randint(5, 10), random.randint(0,1), {"DropCoins" : random.randint(40,50), "DropItems" : {"Grain" : random.randint(2,4) }} )
+
+        IndentAway()
+        print(makeboldedtext(PlayerName) + ": There you go, they're all dead")
+        time.sleep(2)
+        print(makeboldedtext("Mayor:") + " Thank you so much, take these as a token of my appreciation")
+        time.sleep(1.25)
+        print("<x67 coins added to inventory>")
+        PlayerCoinAmnt += 67
+
+        time.sleep(2)
+        print(makeboldedtext("Mayor:") + " Thank you, just come back when you have the 35 grain, and ill pay you well.")
+        time.sleep(2)
+
+        GrainTownQuest2Part1Complete = True
+        BaseDecide()
+
+    else:
+        IndentAway()
+        GrainGiveInput = raw_input(makeboldedtext("Mayor:") + " Do you have the 35 grain?\nYes/No: ")
+
+        if GrainGiveInput.lower() == "yes":
+
+            if "grain" in PlayerInventory and PlayerInventory["grain"]["Amount"] >= 35:
+                IndentAway()
+
+                RemoveItemFromInventory("grain", 35)
+
+                print("<" + makeboldedtext('"x35 Grain"') + "> Removed from inventory")
+                time.sleep(2)
+                print(makeboldedtext("Mayor:") + " Thank you so much, now we can feed some people with this")
+                time.sleep(2)
+                print(makeboldedtext("Mayor:") + " Here, take these, just as I promised")
+                time.sleep(1.25)
+                print("added x125 coins to inventory")
+                PlayerCoinAmnt += 125
+                time.sleep(2.75)
+
+                addspacer()
+                print(makeboldedtext("Mayor:") + " Ok, I better go turn this into bread now, thank you so much!")
+                time.sleep(2)
+                print(makeboldedtext(PlayerName) + ": You're welcome")
+                time.sleep(2)
+
+                GrainTownQuest2Complete = True
+                BaseDecide()
+
+
+            else:
+                addspacer()
+                print(makeboldedtext("Mayor:") + " No you don't, come back later with the grain please")
+                time.sleep(2)
+                BaseDecide()
+
+        else:
+            print(makeboldedtext("Mayor:") + " Ok, give it soon please")
+            time.sleep(2)
+
+            BaseDecide()
+
+def Play_Grain_Town_Quest_3():
+    global PlayerName
+    global GrainTownQuest3Part1Complete
+    global GrainTownQuest3Complete
+
+    if GrainTownQuest3Part1Complete == False:
+        IndentAway()
+
+        print("You head to the blacksmith and walk up to the counter")
+        time.sleep(2.5)
+
+        print(makeboldedtext("Blacksmith:") + " Hey there, " + PlayerName + ", Good to see you!")
+        time.sleep(3.25)
+
+        print(makeboldedtext("Blacksmith:") + " I've been working with the mayor, and we need more stone swords for a planned attack")
+        time.sleep(3.25)
+
+        print(makeboldedtext("Blacksmith:") + " But the problem is, people have been buying me out, so I don't have a weapon to defend myself with")
+        time.sleep(4.25)
+
+        print(makeboldedtext("Blacksmith:") + " And without a weapon to defend myself with, its too dangerous to go out and scavenge for resources, so I need you to do it")
+        time.sleep(4)
+
+        print(makeboldedtext("Blacksmith:") + " Although, since people have been buying me out, I have tons of money on hand")
+        time.sleep(3.5)
+
+        print(makeboldedtext("Blacksmith:") + " So if you can get me four stone swords, I can pay you quite well")
+        time.sleep(3)
+
+        addspacer()
+        print(makeboldedtext(PlayerName + ":") + " How am I supposed to make a stone sword?")
+        time.sleep(3.5)
+
+        print(makeboldedtext("Blacksmith:") + " To make one stone sword, you need " + makeboldedtext(" five rocks and two pieces of wood"))
+        time.sleep(3.5)
+
+        print(makeboldedtext("Blacksmith:") + " So can you?")
+        time.sleep(2.5)
+
+        addspacer()
+
+        print(makeboldedtext(PlayerName + ":") + " Sure I can try and make them for you")
+        time.sleep(2.5)
+
+        print(makeboldedtext("Blacksmith:") + " Thank you so much, and remember, I won't leave you unpaid..")
+        time.sleep(3.5)
+
+        GrainTownQuest3Part1Complete = True
+        BaseDecide()
+
+    else:
+        IndentAway()
+        RetrivedItem = raw_input(makeboldedtext("Blacksmith:") + " Hey! Did you get those four stone swords for me yet?\n(Yes/No): ")
+
+        if RetrivedItem.lower() == "yes":
+
+            if "stone sword" in PlayerInventory and PlayerInventory["stone sword"]["Amount"] >= 4:
+                IndentAway()
+
+                RemoveItemFromInventory("stone sword", 4)
+
+                print("<" + makeboldedtext('"x4 stone sword"') + "> Removed from inventory")
+                time.sleep(2)
+                addspacer()
+
+                print( makeboldedtext("Blacksmith:") + " Thank you!")
+                time.sleep(2)
+
+
+                print(makeboldedtext("Blacksmith:") + " And now for your reward, I have two options for you to choose from.")
+                time.sleep(3.5)
+
+                print(makeboldedtext("Blacksmith:") + " You can either have 450 coins, or this " + makeboldedtext("weathered chestplate"))
+                time.sleep(3)
+
+                print(makeboldedtext("Blacksmith:") + " The chestplate may not be much but it's not easy to obtain them")
+                time.sleep(3.25)
+
+                def ChooseItem():
+                    addspacer()
+                    GetWhatInput = raw_input(makeboldedtext("Blacksmith:") + " So which do you want? the " + makeboldedtext("450 coins") + " or the " + makeboldedtext("Weathered Chestplate") + "? (Make sure to either type 'coins' or 'chestplate')\n(coins/chestplate): ")
+
+                    if GetWhatInput.lower() == "chestplate" or GetWhatInput.lower() == "weathered chestplate":
+                        global GrainTownQuest3Complete
+                        addspacer()
+                        print(makeboldedtext("Blacksmith:") + " The chestplate. Good choice!")
+                        time.sleep(2.5)
+
+                        print(makeboldedtext("Blacksmith:") + " Well, as I promised, Here it is")
+                        time.sleep(0.5)
+                        print("x1 <" + makeboldedtext('"weathered chestplate"') + "> Added to inventory")
+                        AddPresetToInventory("weathered chestplate", 1)
+                        time.sleep(2.5)
+
+                        print(makeboldedtext("Blacksmith:") + " I appreciate it, I have to go give these swords to the mayor now. Bye!")
+                        time.sleep(3)
+
+                        GrainTownQuest3Complete = True
+                        BaseDecide()
+
+
+                    elif GetWhatInput.lower() == "coins" or GetWhatInput.lower() == "coin" or GetWhatInput.lower() == "450 coins":
+                        global PlayerCoinAmnt
+                        global GrainTownQuest3Complete
+                        addspacer()
+                        print(makeboldedtext("Blacksmith:") + " The coins. Good choice!")
+                        time.sleep(2.5)
+
+                        print(makeboldedtext("Blacksmith:") + " Well, as I promised, Here they are")
+                        time.sleep(0.5)
+                        print("x450 <" + makeboldedtext('"coin"') + "> Added")
+                        PlayerCoinAmnt += 450
+                        time.sleep(2.5)
+
+                        print(makeboldedtext("Blacksmith:") + " I appreciate it, I have to go give these swords to the mayor now. Bye!")
+                        time.sleep(3)
+
+                        GrainTownQuest3Complete = True
+                        BaseDecide()
+
+                    else:
+                        print(makeboldedtext("Blacksmith:") + " Can you please repeat that?")
+                        time.sleep(4)
+                        IndentAway()
+                        ChooseItem()
+                
+                ChooseItem()
+
+
+
+
+                BaseDecide()
+
+
+            else:
+                addspacer()
+                print(makeboldedtext("Blacksmith:") + " What? You dont though. Remember, it's 5 rock and 2 wood.")
+                time.sleep(3)
+                BaseDecide()
+
+        else:
+            BaseDecide()
+
+
+#--<End of quests>--#
+
+def DealPlayerDamage(Amnt):
+    global PlayerHealth
+    global PlayerArmor
+    global Armor
+    reduceamnt = 0
+
+    for x in PlayerArmor:
+        if PlayerArmor[x] != None and "Reduce" in Armor[PlayerArmor[x]] and Armor[PlayerArmor[x]]["Reduce"] != 0:
+            reduceamnt += Armor[PlayerArmor[x]]["Reduce"]
+
+    if Amnt < 0:
+        Amnt = 0
+    
+    PlayerHealth -= (Amnt - reduceamnt)
+    
+
+    if PlayerHealth <= 0:
+        IndentAway()
+        print(makeboldedtext("You died."))
+        exit()
+
+def HealPlayerHealth(Amnt):
+    global PlayerHealth
+    global MaxPlayerHealth
+
+    PlayerHealth += Amnt
+
+    if PlayerHealth > MaxPlayerHealth:
+        PlayerHealth = MaxPlayerHealth
+
+#adds a preset item to the inventory
+def AddPresetToInventory(ItemName, Amount):
+    global PlayerInventory
+    global PresetItems
+
+    if ItemName.lower().lower() in PlayerInventory.keys():
+
+        if "Amount" in PlayerInventory[ItemName.lower()].keys():
+            PlayerInventory[ItemName.lower()]["Amount"] += Amount
+        
+        else:
+            PlayerInventory[ItemName.lower()]["Amount"] = Amount
+    
+    elif ItemName.lower() in PresetItems.keys() and ItemName.lower() not in PlayerInventory.keys(): 
+        PlayerInventory[ItemName.lower()] = PresetItems[ItemName.lower()]
+        PlayerInventory[ItemName.lower()]["Amount"]  = Amount
+
+    elif ItemName.lower() not in PresetItems.keys():
+        print("Item not found")
+
+    else:
+        print("<Error:> Error giving player item")
+
+#Removes item from inventory
+def RemoveItemFromInventory(ItemName, AmountRemove):
+    global PlayerInventory
+
+    PlayerInventory[ItemName]["Amount"] -= AmountRemove
+
+    if PlayerInventory[ItemName]["Amount"] <= 0:
+        del PlayerInventory[ItemName]
+    
+#Creates an enemy and prompts user to fight them
+def MakeEnemy(Name, Health, Damage, Regen, HealItems, DropStuff):
+
+    global PlayerMainWeapon
+    global PlayerHealth
+    global PlayerHealItems
+    global PlayerHealAmnt
+    global PlayerCoinAmnt
+    global PlayerInventory
+    global PlayerArmor
+    Totalhealth = Health
+
+    IndentAway()
+
+    def DoEnemyMove(Name, Health, Damage, Regen, HealItems, DropStuff):
+        HealChanceAmnt = random.randint(1,2)
+
+        #Heals if low health, and player high health
+        if Health <= 8 and PlayerHealth >= Damage and HealItems > 0 and HealChanceAmnt == 1:
+            HealItems -= 1
+            #gets heal amount
+            Regenamnt = random.randint(Regen - 5, Regen + 5)
+
+            #Says and applies
+            Health += Regenamnt
+            print(str(Name) + " Has decided to heal, regaining " + makeboldedtext(Regenamnt) + " Health, and having a total of " + makeboldedtext(Health) + " Health")
+            
+            time.sleep(2)
+            #adds spacer and makes enemy
+            addspacer()
+            MakeEnemy(Name, Health, Damage, Regen, HealItems, DropStuff)
+            
+        
+        #if player health low enough and enemy health low it goes for a final blow
+        elif Health <= 8 and PlayerHealth <= Damage:
+            #Gets damage amount
+            DamageAmnt = random.randint(Damage-5, Damage+5)
+
+            #Gets reduction damage amnt
+            reduceamnt = 0
+            DisplayDamage = 0
+
+            for x in PlayerArmor:
+                if PlayerArmor[x] != None and "Reduce" in Armor[PlayerArmor[x]] and Armor[PlayerArmor[x]]["Reduce"] != 0:
+                    reduceamnt += Armor[PlayerArmor[x]]["Reduce"]
+
+            if DamageAmnt - reduceamnt < 0:
+                DisplayDamage = 0
+            else:
+                DisplayDamage = DamageAmnt - reduceamnt
+
+            #Says and applies
+            DealPlayerDamage(DamageAmnt)
+            print(str(Name) + " Has decided to fight back, dealing " + makeboldedtext(DisplayDamage) + " Damage, Which leaves you a total of " + makeboldedtext(PlayerHealth) + " Health")
+
+            time.sleep(2)
+            #adds spacer and makes enemy
+            addspacer()
+            MakeEnemy(Name, Health, Damage, Regen, HealItems, DropStuff)
+
+        elif Health >= 8 or Health <= 8 and PlayerHealth >= Damage and HealItems <= 0 or Health <= 8 and PlayerHealth >= Damage and  HealChanceAmnt != 1 :
+            #Gets damage amount
+            DamageAmnt = random.randint(Damage-5, Damage+5)
+
+            #Gets reduction damage amnt
+            reduceamnt = 0
+            DisplayDamage = 0
+
+            for x in PlayerArmor:
+                if PlayerArmor[x] != None and "Reduce" in Armor[PlayerArmor[x]] and Armor[PlayerArmor[x]]["Reduce"] != 0:
+                    reduceamnt += Armor[PlayerArmor[x]]["Reduce"]
+
+            if DamageAmnt - reduceamnt < 0:
+                DisplayDamage = 0
+            else:
+                DisplayDamage = DamageAmnt - reduceamnt
+
+            #Says and applies
+            DealPlayerDamage(DamageAmnt)
+            print(str(Name) + " Has decided to fight back, dealing " + makeboldedtext(DisplayDamage) + " Damage, Which leaves you a total of " + makeboldedtext(PlayerHealth) + " Health")
+
+            time.sleep(2)
+            #adds spacer and makes enemy
+            addspacer()
+            MakeEnemy(Name, Health, Damage, Regen, HealItems, DropStuff)
+
+    print("<--Actions:-->\n1. Fight\n2. Run\n3. Heal\n4. Stats\n<------------>")
+    FightAction = raw_input(makeboldedtext(Name) +" is ready to fight, Choose your action: ")
+
+    if str(FightAction.lower()) == "run" or str(FightAction.lower()) == "2":
+        randnum = random.randint(1,4)
+
+        if randnum == 1 or randnum == 2 or randnum == 3:
+            addspacer()
+            print("You unsuccessfully ran away")
+            
+            time.sleep(1)
+
+            #Makes enemy do its move
+            DoEnemyMove(Name, Totalhealth, Damage, Regen, HealItems, DropStuff)
+
+        else:
+            addspacer()
+            print("You successfully ran away")
+            time.sleep(2)
+
+    elif str(FightAction.lower()) == "fight" or str(FightAction.lower()) == "1": 
+    
+        #generates and deals damage
+        attack = random.randint( Weapons[PlayerMainWeapon]["Damage"] - 5,Weapons[PlayerMainWeapon]["Damage"] + 5)
+        Totalhealth -= attack
+
+        if Totalhealth > 0:
+            addspacer()
+            print("You attacked " + makeboldedtext(Name) + " for " + makeboldedtext(attack) + " damage! It now has " + makeboldedtext(Totalhealth) + " HP")
+
+            #waits then
+            time.sleep(2)
+            #Makes enemy do its move
+            DoEnemyMove(Name, Totalhealth, Damage, Regen, HealItems, DropStuff)
+
+        elif Totalhealth <= 0:
+            addspacer()
+            print("You killed " + str(Name) + " with the final blow doing " + str(attack) + " damage!")
+            time.sleep(2.5)
+
+            IndentAway()
+            print(makeboldedtext("Dropped Items:"))
+            addspacer()
+
+            if "DropCoins" in DropStuff:
+                print(makeboldedtext("x" + str(DropStuff["DropCoins"])) + " Coins")
+                PlayerCoinAmnt += DropStuff["DropCoins"]
+
+            if "DropItems" in DropStuff:
+                for x in DropStuff["DropItems"].keys():
+                    print(makeboldedtext("x" + str(DropStuff["DropItems"][x])) + " " + str(x))
+                    AddPresetToInventory(x, DropStuff["DropItems"][x] )
+
+            time.sleep(2)
+    
+    elif str(FightAction.lower()) == "heal" or str(FightAction.lower()) == "3":
+        #genereates and heals health
+        healamnt = random.randint(PlayerHealAmnt, PlayerHealAmnt + 5)
+
+        if PlayerHealItems > 0:
+            HealPlayerHealth(healamnt)
+            PlayerHealItems -= 1
+
+            print("You have healed " + makeboldedtext(healamnt) + " Health, with a total of " + makeboldedtext(PlayerHealth) )
+            time.sleep(2)
+
+            MakeEnemy(Name, Totalhealth, Damage, Regen, HealItems, DropStuff)
+        else: 
+            print("You do not have any healing items to use")
+            time.sleep(2)
+
+            MakeEnemy(Name, Totalhealth, Damage, Regen, HealItems, DropStuff)
+
+    elif str(FightAction.lower()) == "stats" or str(FightAction.lower()) == "4":
+        global PlayerMainWeapon
+        global PlayerCoinAmnt
+        global PlayerHealth
+        global MaxPlayerHealth
+        global PlayerHealItems
+
+        IndentAway()
+        print(makeboldedtext("-<Player Stats:>-") + "\nCoins: " + str(PlayerCoinAmnt) + "\nMaxHealth: " + str(MaxPlayerHealth) + "\nHealth: " + str(PlayerHealth) + "\nMain Weapon: " + PlayerMainWeapon + "\nHealing Items: " + str(PlayerHealItems) )
+
+        ContinueInput = raw_input("Enter anything to continue: ")
+
+        if ContinueInput:
+            MakeEnemy(Name, Totalhealth, Damage, Regen, HealItems, DropStuff)
+        else: 
+            MakeEnemy(Name, Totalhealth, Damage, Regen, HealItems, DropStuff)
+
+    #If option was invalid
+    else: 
+        #says it was invalid
+        addspacer()
+        print("That is not a valid option, try again")
+
+        time.sleep(2)
+
+        #Makes new enemy
+        MakeEnemy(Name, Health, Damage, Regen, HealItems, DropStuff)
+
+#The starting sequence which gives the player a name, healing items, etc.
+def StartSequence():
+    IndentAway()
+    
+    global PlayerName
+    global PlayerMainWeapon
+    global PlayerHealItems
+    global PlayerLocation
+
+
+    print(''' 
+    ▄█     █▄     ▄████████  ▄█        ▄████████  ▄██████▄    ▄▄▄▄███▄▄▄▄      ▄████████          ███      ▄██████▄  
+    ███     ███   ███    ███ ███       ███    ███ ███    ███ ▄██▀▀▀███▀▀▀██▄   ███    ███      ▀█████████▄ ███    ███ 
+    ███     ███   ███    █▀  ███       ███    █▀  ███    ███ ███   ███   ███   ███    █▀          ▀███▀▀██ ███    ███ 
+    ███     ███  ▄███▄▄▄     ███       ███        ███    ███ ███   ███   ███  ▄███▄▄▄              ███   ▀ ███    ███ 
+    ███     ███ ▀▀███▀▀▀     ███       ███        ███    ███ ███   ███   ███ ▀▀███▀▀▀              ███     ███    ███ 
+    ███     ███   ███    █▄  ███       ███    █▄  ███    ███ ███   ███   ███   ███    █▄           ███     ███    ███ 
+    ███ ▄█▄ ███   ███    ███ ███▌    ▄ ███    ███ ███    ███ ███   ███   ███   ███    ███          ███     ███    ███ 
+    ▀███▀███▀    ██████████ █████▄▄██ ████████▀   ▀██████▀   ▀█   ███   █▀    ██████████         ▄████▀    ▀██████▀  
+                            ▀                                                                                        ''')
+
+    time.sleep(4)
+
+    IndentAway()
+    print('''
+        ███        ▄█    █▄     ▄█     ▄████████         ▄██████▄     ▄████████   ▄▄▄▄███▄▄▄▄      ▄████████ 
+    ▀█████████▄   ███    ███   ███    ███    ███        ███    ███   ███    ███ ▄██▀▀▀███▀▀▀██▄   ███    ███ 
+       ▀███▀▀██   ███    ███   ███▌   ███    █▀         ███    █▀    ███    ███ ███   ███   ███   ███    █▀  
+        ███   ▀  ▄███▄▄▄▄███▄▄ ███▌   ███              ▄███          ███    ███ ███   ███   ███  ▄███▄▄▄     
+        ███     ▀▀███▀▀▀▀███▀  ███▌ ▀███████████      ▀▀███ ████▄  ▀███████████ ███   ███   ███ ▀▀███▀▀▀     
+        ███       ███    ███   ███           ███        ███    ███   ███    ███ ███   ███   ███   ███    █▄  
+        ███       ███    ███   ███     ▄█    ███        ███    ███   ███    ███ ███   ███   ███   ███    ███ 
+       ▄████▀     ███    █▀    █▀    ▄████████▀         ████████▀    ███    █▀   ▀█   ███   █▀    ██████████ 
+                                                                                                             ''')
+
+
+    time.sleep(4)
+    addspacer()
+
+    PlayerNameChoose = raw_input("???: What is your name Traveller?\nName: ")
+    PlayerName = PlayerNameChoose
+    time.sleep(0.6)
+
+    print("???: Well hello there, " + PlayerName)
+    time.sleep(3)
+
+    print("???: Take this sword, It should help you on your journey.")
+    time.sleep(1.75)
+
+    GiveItem = "starter sword"
+    print('<"' + makeboldedtext(GiveItem) + '" added to inventory>')
+    PlayerMainWeapon = GiveItem
+    time.sleep(3)
+
+    print("???: Take these too, you can use them to heal.")
+    time.sleep(1.75)
+
+    print('<5x "' + makeboldedtext("Healing Item") + '" added to inventory>')
+    PlayerHealItems += 5
+    time.sleep(3)
+
+
+    print("???: Oh look, a goblin! It should be perfect practice. Go fight it!")
+    time.sleep(4.25)
+    MakeEnemy("Goblin", 25, 10, 10, 2, {"DropCoins" : random.randint(30,40) })
+
+    PlayerLocation = "grain town"
+    addspacer()
+    BaseDecide()
+
+#Prompts the user with their town, and the action they can choose 
+def BaseDecide():
+    global PlayerLocation
+    global PlayerInventory
+    global CraftingRecipies
+    IndentAway()
+
+    print(makeboldedtext("<--Actions:-->") + "\n1. Inventory\n2. Stats\n3. Wander\n4. Shop\n5. Equip\n6. Quest\n7. Heal\n8. Craft\n<------------>")
+    PlayerAction = raw_input("You are in " + PlayerLocation + ", What would you like to do? \nAction: ")
+
+    if PlayerAction.lower() == "inventory" or PlayerAction == "1":
+        addspacer()
+        IndentAway()
+        print(makeboldedtext("Inventory:"))
+        GetNum = 1
+
+        for x in PlayerInventory.keys():
+            if "Amount" not in PlayerInventory[x].keys():
+                print(str(GetNum) + "." + " " + x + " x1")
+            else:
+                print(str(GetNum) + "." + " " + x + " x" + str(PlayerInventory[x]["Amount"]))
+
+            GetNum += 1
+
+        time.sleep(1)
+        addspacer()
+        ContinueInput = raw_input("Enter anything to continue: ")
+
+        if ContinueInput:
+            BaseDecide()
+        else:
+            BaseDecide()
+
+    elif PlayerAction.lower() == "stats" or PlayerAction == "2":
+        global PlayerMainWeapon
+        global PlayerCoinAmnt
+        global PlayerHealth
+        global MaxPlayerHealth
+
+        IndentAway()
+        print(makeboldedtext("-<Player Stats:>-") + "\nCoins: " + str(PlayerCoinAmnt) + "\nMaxHealth: " + str(MaxPlayerHealth) + "\nHealth: " + str(PlayerHealth) + "\nMain Weapon: " + PlayerMainWeapon )
+
+        ContinueInput = raw_input("Enter anything to continue: ")
+
+        if ContinueInput:
+            BaseDecide()
+        else: 
+            BaseDecide()
+
+    elif PlayerAction.lower() == "wander" or PlayerAction == "3":
+
+        global PlayerCoinAmnt
+
+        if PlayerLocation == "grain town":
+            DoWhatNum = random.randint(1,39)
+            genchances = {"Enemy" : range(1,26), "Item" : range(25,36), "Nothing" : range(35,37),  "Coins" : range(36,39)}
+
+            if DoWhatNum in genchances["Enemy"]:
+                #makes goblin enemy with more random stats
+                Enemies = ["Goblin", "Forest Ent", "Grain Goblin", "Axe-Weilding Troll"]
+                EnemyGen = random.randint(1,4)
+
+                print("You found a " + makeboldedtext(Enemies[EnemyGen - 1]) + ", prepare to fight!")
+                time.sleep(1.5)
+
+                #Goblin & buff goblin
+                if EnemyGen == 1:
+                    GoblinGen = random.randint(1,15)
+                    print(GoblinGen)
+
+                    if GoblinGen != 15:
+                        MakeEnemy("Goblin", random.randint(25,40), random.randint(10, 15), random.randint( 8, 13), random.randint(0,3), {"DropCoins" : random.randint(10 , 45)})
+                        BaseDecide()
+                    else:
+                        if random.randint(1,2) == 1:
+
+                            MakeEnemy("Buff Goblin", random.randint(40,50), random.randint(20, 25), random.randint(5, 10), random.randint(0,2), {"DropCoins" : random.randint(85 , 125) })
+                            BaseDecide()
+                        else:
+                            MakeEnemy("Buff Goblin", random.randint(40,50), random.randint(20, 25), random.randint(5, 10), random.randint(0,2), {"DropCoins" : random.randint(85 , 125), "DropItems" : {"basic goblin boots" : 1} })
+                            BaseDecide()
+
+                #forest ent
+                elif EnemyGen == 2:
+                    MakeEnemy("Forest Ent", random.randint(55,65), random.randint(3, 7), random.randint(4, 6), random.randint(0,6), {"DropCoins" : random.randint(4,13), "DropItems" : {"Rock" : random.randint(6,8), "Wood" : random.randint(4,7) } })
+                    BaseDecide()
+
+                #grain goblin
+                elif EnemyGen == 3:
+                    MakeEnemy("Grain Goblin", random.randint(5,10), random.randint(20, 28), random.randint(5, 10), random.randint(0,2), {"DropCoins" : random.randint(10,25), "DropItems" : {"Grain" : random.randint(2,4) }} )
+                    BaseDecide()
+
+                #axe-weilding troll
+                elif EnemyGen == 4:
+                    AxeWeildingGen = random.randint(1,12)
+                    print(AxeWeildingGen)
+                    if AxeWeildingGen != 12:
+                        MakeEnemy("Axe-Weilding Troll", random.randint(15,30), random.randint(25, 30), random.randint(5, 10), 0, {"DropCoins" : random.randint(30 , 60), "DropItems" : {"Wood" : random.randint(3,5)} })
+                        BaseDecide()
+                    else:
+                        MakeEnemy("Rare Axe-Weilding Troll", random.randint(30,35), random.randint(30, 35), random.randint(5, 10), 1, {"DropCoins" : random.randint(50 , 75), "DropItems" : {"basic troll axe" : 1, "Wood" : random.randint(3,5)} })
+                        BaseDecide()
+
+            elif DoWhatNum in genchances["Coins"]:
+                #Adds coins to your inventory   
+                CoinFindAmount = random.randint(20, 40)
+                print("Nice! You just found " + makeboldedtext(CoinFindAmount) + " Coins!")
+
+                PlayerCoinAmnt += CoinFindAmount
+                time.sleep(2)
+
+                BaseDecide()
+
+            elif DoWhatNum in genchances["Nothing"]:
+                #prints out a random irrelevant event and does nothing for the player
+                otherthings = ["although you saw a rock shaped like a hat", "but you did see a cool bird", "but you did have a fun time", "although there was a nice breeze outside", "althugh you got bit by an ant", "but you saw a neat bug"]
+                otherthingnum = random.randint(0,len(otherthings)-1)
+
+                print("You found nothing, " + str(otherthings[otherthingnum]))
+                time.sleep(3.5)
+
+                BaseDecide()
+            
+            elif DoWhatNum in genchances["Item"]:
+                #Gives player an item
+                GenerateAmnt = random.randint(3,7)
+
+                ItemGenAmnt = random.randint(1,3)
+
+                #Chooses the item
+                if ItemGenAmnt == 1:
+                    Item = "Grain"
+
+                elif ItemGenAmnt == 2:
+                    Item = "Wood"
+
+                elif ItemGenAmnt == 3:
+                    Item = "Rock"
+                    
+
+                print("You were walking around when you found " + str(GenerateAmnt) + " " + Item + "!")
+
+                AddPresetToInventory(Item, GenerateAmnt)
+                time.sleep(2)
+
+                BaseDecide()
+
+        else:
+            print("You cannot wander around here")    
+            time.sleep(2)
+            BaseDecide()
+
+    elif PlayerAction.lower() == "shop" or PlayerAction == "4":
+        global PlayerCoinAmnt
+        global GrainTownShop
+        global PlayerInventory
+
+        IndentAway()
+
+        if PlayerLocation.lower() == "grain town":
+            BuySellinput = raw_input("Shopkeeper: Welcome to the Grain Town shop, would you like to " + makeboldedtext("buy or sell?") + "\n Buy/Sell: ")
+            time.sleep(1.25)
+            addspacer()
+
+            if BuySellinput.lower() == "buy":
+                IndentAway()
+
+                ShopDisplayNum = 1
+                for x in GrainTownShop.keys():
+                    print(str(ShopDisplayNum) + "." + " " + makeboldedtext(x) + "\n   >" + GrainTownShop[x]["Description"] + "\n   Price: " + str(GrainTownShop[x]["BuyPrice"]) + "\n  Stock: " + str(GrainTownShop[x]["Amount"]) + "\n")
+                    ShopDisplayNum += 1
+
+                BuyWhat = raw_input("\nShopkeeper: What would you like to buy? (enter full name)\nBuy: ")
+
+                if BuyWhat.lower() in GrainTownShop.keys():
+
+                    if PlayerCoinAmnt >= GrainTownShop[BuyWhat]["BuyPrice"]:
+
+                        addspacer()
+                        BuyAmntInput = raw_input("How many of these would you like to buy?\n Buy amount: ")
+
+                        if is_number(BuyAmntInput) == True:
+                            BuyAmnt = int(BuyAmntInput)
+
+                            if PlayerCoinAmnt >= GrainTownShop[BuyWhat]["BuyPrice"] * BuyAmnt and GrainTownShop[BuyWhat]["Amount"] >= BuyAmnt:
+                                AddPresetToInventory(BuyWhat, BuyAmnt)
+                                PlayerCoinAmnt -= GrainTownShop[BuyWhat]["BuyPrice"]
+
+                                addspacer() 
+                                print("x" + str(BuyAmnt) + " " + str(BuyWhat) + " Was added to your inventory!\n" + str(GrainTownShop[BuyWhat]["BuyPrice"] * BuyAmnt) + " Coins were removed")
+                                GrainTownShop[BuyWhat]["Amount"] -= BuyAmnt
+
+                                if GrainTownShop[BuyWhat]["Amount"] == 0:
+                                    del GrainTownShop[BuyWhat]
+
+                                time.sleep(2)
+
+                                BaseDecide()
+                            
+                            elif GrainTownShop[BuyWhat]["Amount"] < BuyAmnt:
+                                BuyLessInput = raw_input("There aren't this many in stock, would you like to buy as much as you can afford?\nYes/No: ")
+
+                                if BuyLessInput.lower() == "no":
+                                    BaseDecide()
+
+                                elif BuyLessInput.lower() == "yes":
+                                    Amount = GrainTownShop[BuyWhat]["Amount"]
+
+                                    if GrainTownShop[BuyWhat]["Amount"] * GrainTownShop[BuyWhat]["BuyPrice"] <= PlayerCoinAmnt:
+
+                                        price = GrainTownShop[BuyWhat]["BuyPrice"] * Amount
+                                        PlayerCoinAmnt -= GrainTownShop[BuyWhat]["BuyPrice"] * Amount
+
+                                        GrainTownShop[BuyWhat]["Amount"] -= Amount
+                                        if GrainTownShop[BuyWhat]["Amount"] == 0:
+                                            del GrainTownShop[BuyWhat]
+
+                                        AddPresetToInventory(BuyWhat, Amount)
+
+                                        print("Succesfully bought " + str(Amount) + " " + str(BuyWhat) + "'s for " + str(price) + " coins")
+                                        time.sleep(2)
+
+                                        BaseDecide()
+
+                                    else:
+                                        MaxBuyAmnt = round( (PlayerCoinAmnt / GrainTownShop[BuyWhat]["BuyPrice"] - 1) * GrainTownShop[BuyWhat]["BuyPrice"])
+
+                                        price = GrainTownShop[BuyWhat]["BuyPrice"] * MaxBuyAmnt
+                                        PlayerCoinAmnt -= GrainTownShop[BuyWhat]["BuyPrice"] * MaxBuyAmnt
+
+                                        GrainTownShop[BuyWhat]["Amount"] -= MaxBuyAmnt
+                                        if GrainTownShop[BuyWhat]["Amount"] == 0:
+                                            del GrainTownShop[BuyWhat]
+
+                                        AddPresetToInventory(BuyWhat, MaxBuyAmnt)
+
+                                        print("Succesfully bought " + str(MaxBuyAmnt) + " " + str(BuyWhat) + "'s for " + str(price) + " coins")
+                                        time.sleep(2)
+
+                                        BaseDecide()
+                                        
+                                else:
+                                    print("Not a valid answer, defaulting to 'No' ")
+                                    time.sleep(1.25)
+
+                                    BaseDecide()
+
+                            
+                            else:
+                                BuyLessInput = raw_input("You do not have enough coins to purchase this many, would you like to buy the most you can?\n (Yes/No): ")
+
+                                if BuyLessInput.lower() == "yes":
+                                    if GrainTownShop[BuyWhat]["Amount"] * GrainTownShop[BuyWhat]["BuyPrice"] <= PlayerCoinAmnt:
+                                        price = GrainTownShop[BuyWhat]["BuyPrice"] * MaxBuyAmnt
+                                        PlayerCoinAmnt -= GrainTownShop[BuyWhat]["BuyPrice"] * Amount
+
+                                        GrainTownShop[BuyWhat]["Amount"] -= Amount
+                                        if GrainTownShop[BuyWhat]["Amount"] == 0:
+                                            del GrainTownShop[BuyWhat]
+
+                                        AddPresetToInventory(BuyWhat, Amount)
+
+                                        print("Succesfully bought " + str(Amount) + " " + str(BuyWhat) + "'s for " + str(price) + " coins")
+                                        time.sleep(2)
+
+                                        BaseDecide()
+
+                                    else:
+                                        MaxBuyAmnt = round( (PlayerCoinAmnt / GrainTownShop[BuyWhat]["BuyPrice"] - 1) * GrainTownShop[BuyWhat]["BuyPrice"])
+
+                                        price = GrainTownShop[BuyWhat]["BuyPrice"] * MaxBuyAmnt
+                                        PlayerCoinAmnt -= GrainTownShop[BuyWhat]["BuyPrice"] * MaxBuyAmnt
+
+                                        GrainTownShop[BuyWhat]["Amount"] -= MaxBuyAmnt
+                                        if GrainTownShop[BuyWhat]["Amount"] == 0:
+                                            del GrainTownShop[BuyWhat]
+
+                                        AddPresetToInventory(BuyWhat, MaxBuyAmnt)
+
+                                        print("Succesfully bought " + str(MaxBuyAmnt) + " " + str(BuyWhat) + "'s for " + str(price) + " coins")
+                                        time.sleep(2)
+
+                                        BaseDecide()
+
+                                elif BuyLessInput.lower() == "no":
+                                    BaseDecide()
+                                else:
+                                    print("Not valid, defaulting to 'No'")
+                                    time.sleep()
+
+                                    BaseDecide
+
+                        
+                        else:
+                            print("Thats literally not even a number my guy")
+                            time.sleep(2)
+
+                            BaseDecide()
+
+                    else:
+                        addspacer()
+                        print("You don't have enough money to buy this item, you need " + str(GrainTownShop[BuyWhat]["BuyPrice"] - PlayerCoinAmnt) + " More coins")
+                        time.sleep(2)
+
+                        BaseDecide()
+
+                else:
+
+                    print("This item is not in the shop")
+                    time.sleep(1.25)
+
+                    BaseDecide()
+            
+            elif BuySellinput.lower() == "sell":
+                addspacer()
+                IndentAway()
+                print(makeboldedtext("Inventory:"))
+                GetNum = 1
+
+                for x in PlayerInventory.keys():
+                    if "Amount" not in PlayerInventory[x].keys():
+                        print(str(GetNum) + "." + " " + x + " x1")
+                    else:
+                        print(str(GetNum) + "." + " " + x + " x" + str(PlayerInventory[x]["Amount"]))
+
+                    GetNum += 1
+
+                addspacer()
+                SellWhat = raw_input("Shopkeeper: What would you like to sell?\nSell: ")
+
+                if SellWhat.lower() in PlayerInventory:
+                    addspacer()
+                    SellAmnt = raw_input("Shopkeeper: How many would you like to sell?\n Amount: ")
+                    SellWhat = SellWhat.lower()
+
+                    if is_number(SellAmnt) == True:
+                        SellAmnt = int(SellAmnt)
+
+                        if PlayerInventory[SellWhat]["Amount"] >= SellAmnt:
+                            PlayerCoinAmnt += PlayerInventory[SellWhat]["Amount"] * PlayerInventory[SellWhat]["SellPrice"]
+                            addcoinamnt = PlayerInventory[SellWhat]["Amount"] * PlayerInventory[SellWhat]["SellPrice"]
+
+                            PlayerInventory[SellWhat]["Amount"] -= SellAmnt
+
+                            if PlayerInventory[SellWhat]["Amount"] <= 0:
+                                del PlayerInventory[SellWhat]
+                            
+                            addspacer()
+                            print("Succesfully sold " + makeboldedtext(SellWhat) + " for " + makeboldedtext(addcoinamnt) + " coins!")
+                            time.sleep(2.25)
+
+                            BaseDecide()
+
+                        else:
+                            addspacer()
+                            SellLessInput = raw_input("Shopkeeper: You don't have that many, do you just want to sell me all you have?\n (Yes/No): ")
+
+                            if SellLessInput.lower() == "yes":
+                                SellAmnt = PlayerInventory[SellWhat]["Amount"]
+
+                                PlayerCoinAmnt += PlayerInventory[SellWhat]["Amount"] * PlayerInventory[SellWhat]["SellPrice"]
+                                addcoinamnt = PlayerInventory[SellWhat]["Amount"] * PlayerInventory[SellWhat]["SellPrice"]
+
+                                del PlayerInventory[SellWhat]
+                                
+                                addspacer()
+                                print("Succesfully sold " + makeboldedtext(SellWhat) + " for " + makeboldedtext(addcoinamnt) + " coins!")
+                                time.sleep(2.25)
+
+                                BaseDecide()
+
+                            else:
+                                addspacer()
+                                print("Shopkeeper: Alright, goodbye then!")
+                                time.sleep(1.25)
+
+                                BaseDecide()
+
+
+                            
+
+
+                    else:
+                        print("If you dont want to tell me an amount, just get out of my shop.")
+                        time.sleep(1.25)
+
+                        BaseDecide()
+
+                else:
+                    print("Shopkeeper: If you want to sell something you don't have, how about you just leave.")
+                    time.sleep(1.25)
+
+                    BaseDecide()
+
+            else:
+                print("Shopkeeper: If you dont want to give me a valid answer, you can get out of my shop.")
+                time.sleep(1.25)
+
+                BaseDecide()
+
+        else:
+            print("You cannot use the shop around here")    
+            time.sleep(2)
+            BaseDecide()
+
+    elif PlayerAction.lower() == "equip" or PlayerAction == "5":
+        global PlayerInventory
+
+        IndentAway()
+        ShopDisplayNum = 1
+
+        print(makeboldedtext("Equippable Items:"))
+        addspacer()
+
+        for x in PlayerInventory.keys():
+            if "Equippable" in PlayerInventory[x]:
+                print(str(ShopDisplayNum) + "." + " " + makeboldedtext(x) + "\n")
+                ShopDisplayNum += 1
+                
+        if ShopDisplayNum == 1:
+            IndentAway()
+            NothingToEquipInput = raw_input("You have nothing to equip\ntype anything to continue:")
+
+            if NothingToEquipInput or NothingToEquipInput == None or NothingToEquipInput == "":
+                BaseDecide()
+
+        else:
+            time.sleep(1.25)
+            addspacer()
+
+            EquipWhatInput = raw_input("What would you like to equip?\nItem: ")
+
+            if EquipWhatInput.lower() in PlayerInventory.keys() and "Equippable" in PlayerInventory[EquipWhatInput.lower()].keys():
+
+                if "Weapon" in PlayerInventory[EquipWhatInput.lower()]:
+                    global PlayerMainWeapon
+
+                    AddPresetToInventory(PlayerMainWeapon.lower(), 1)
+                    
+                    addspacer()
+                    print("Switched main weapon to " + EquipWhatInput + "\n" + str(PlayerMainWeapon) + " Now in inventory" )
+
+                    PlayerMainWeapon = EquipWhatInput.lower()
+
+                    RemoveItemFromInventory(EquipWhatInput.lower(), 1)
+
+                    time.sleep(2)
+
+                    BaseDecide()
+
+                elif "Armor" in PlayerInventory[EquipWhatInput.lower()]:
+                    global PlayerArmor
+
+                    Type = None
+
+                    #Gets the type
+                    if "Helmet" in PlayerInventory[EquipWhatInput.lower()]:
+                        Type = "Helmet"
+
+                    elif "Chestplate" in PlayerInventory[EquipWhatInput.lower()]:
+                        Type = "Chestplate"
+
+                    elif "Leggings" in PlayerInventory[EquipWhatInput.lower()]:
+                        Type = "Leggings"
+
+                    elif "Boots" in PlayerInventory[EquipWhatInput.lower()]:
+                        Type = "Boots"
+
+                    #Puts other back into inventory
+                    print(Type)
+                    if PlayerArmor[Type] != None:
+                        AddPresetToInventory(PlayerArmor[Type.lower()])
+
+                    PlayerArmor[Type] = EquipWhatInput.lower()
+
+                    addspacer()
+                    print("Switched " + makeboldedtext(Type) + " to " + makeboldedtext(EquipWhatInput))
+                    RemoveItemFromInventory(EquipWhatInput.lower(), 1)
+
+                    time.sleep(2)
+
+                    BaseDecide()
+
+
+                    
+                    
+
+
+
+                else:
+                    addspacer()
+                    print("Error lol")
+                    time.sleep(1.25)
+
+                    BaseDecide()
+                    
+            else:
+                addspacer()
+                print("Item not found")
+                time.sleep(1.5)
+
+                BaseDecide()
+                        
+    elif PlayerAction.lower() == "quest" or PlayerAction == "6":
+        if PlayerLocation == "grain town":
+            global GrainTownQuest1Completed
+            global GrainTownQuest2Complete
+            global GrainTownQuest3Complete
+            
+            if GrainTownQuest1Completed != True:
+                Play_Grain_Town_Quest_1()
+                GrainTownQuest1Completed = True
+                BaseDecide()
+            
+            elif GrainTownQuest2Complete != True:
+                Play_Grain_Town_Quest_2()
+
+            elif GrainTownQuest3Complete != True:
+                Play_Grain_Town_Quest_3()
+
+            else:
+                print("There are no more quests to complete in this town")
+                time.sleep(2)
+                BaseDecide()
+
+        else:
+            print("You cannot do a quest here.")
+            time.sleep(2)
+            BaseDecide()
+
+    elif PlayerAction.lower() == "heal" or PlayerAction == "7":
+
+        global PlayerHealth
+        global MaxPlayerHealth
+        global PlayerCoinAmnt
+        global PlayerHealItems
+        IndentAway()
+        HealHow = raw_input("Would you like to use a healing item or go to the medic?\nMedic/item: ")
+
+        if HealHow.lower() == "medic":
+            CoinAmnt = MaxPlayerHealth - PlayerHealth
+            addspacer()
+
+            if PlayerCoinAmnt >= CoinAmnt :
+
+                PayInput = raw_input("Medic: This will cost " + str(CoinAmnt) + " coins, are you sure?\nYes/No: " )
+
+                if PayInput.lower() == "yes":
+                    PlayerCoinAmnt -= CoinAmnt
+                    HealPlayerHealth(CoinAmnt)
+
+                    addspacer()
+                    print("Medic: Alright, you're all healed up to max health")
+                    time.sleep(2.25)
+
+                    BaseDecide()
+                else:
+                    print("Medic: Alright, bye!")
+                    time.sleep(1.75)
+
+                    BaseDecide()
+            
+            elif PlayerCoinAmnt != 0 and PlayerCoinAmnt < CoinAmnt and PlayerHealth != MaxPlayerHealth:
+                addspacer()
+            
+                HealLess = raw_input("Medic: You cannot heal to full health with your money, do you want me to heal you as much as I can?\nYes/No: ")
+
+                if HealLess.lower() == "yes":
+                    HealAmnt = PlayerCoinAmnt
+                    HealPlayerHealth(HealAmnt)
+
+                    PlayerCoinAmnt -= HealAmnt
+
+                    addspacer()
+                    print("Medic: Alright, Youre all healed up, Right now your health is at " + str(PlayerHealth))
+                    time.sleep(2.25)
+
+                    BaseDecide()
+                
+                else:
+                    print("Medic: Alright, see you later then")
+                    time.sleep(2)
+
+                    BaseDecide()
+
+            elif PlayerHealth == MaxPlayerHealth:
+                addspacer()
+                print("Medic: You already have max health")
+                time.sleep(2)
+
+                BaseDecide()
+
+            elif PlayerCoinAmnt <= 0:
+                addspacer()
+                print("Medic: You do not have the money for me to heal you")
+                time.sleep(2)
+
+                BaseDecide()
+
+            else:
+                BaseDecide()
+        
+        elif HealHow.lower() == "item":
+            
+            if PlayerHealItems != 0 and PlayerHealth != MaxPlayerHealth:
+                HealPlayerHealth(15)
+                PlayerHealItems -= 1
+                
+                addspacer()
+                print("You Healed 15 Health, and your total health is now " + str(PlayerHealth))
+                time.sleep(2.25)
+
+                BaseDecide()
+
+            elif PlayerHealth == MaxPlayerHealth:
+                addspacer()
+                print("You already have max health")
+                time.sleep(2)
+
+                BaseDecide()
+
+            else:
+                addspacer()
+                print("You do not have any items to heal with")
+                time.sleep(2)
+
+                BaseDecide()
+
+        else:
+            addspacer()
+            print("That is not a valid option")
+            time.sleep(2)
+
+            BaseDecide()
+
+    elif PlayerAction.lower() == "craft" or PlayerAction == "8":
+        CraftableItems = {}
+
+        for Item in CraftingRecipies.keys():
+
+            for Citem in CraftingRecipies[Item].keys():
+                if Citem in PlayerInventory and CraftingRecipies[Item][Citem] <= PlayerInventory[Citem]["Amount"]:
+                    CraftAmount = float(round( (PlayerInventory[Citem]["Amount"] / CraftingRecipies[Item][Citem])))
+                    CraftableItems[Item] = {"Item" : Item, "CraftAmount" : CraftAmount}
+                    
+
+        if CraftableItems != {}:
+
+            IndentAway()
+
+            DisplayNum = 0
+
+            print(makeboldedtext("Craftable Items:"))
+            addspacer()
+            print("\n")
+
+            for x in CraftableItems:
+                DisplayNum += 1
+                print(str(DisplayNum) + ". " + makeboldedtext( x ) + "\n   >" + CraftingItemDescriptions[x] + "\n    Amount Craftable: " + str(CraftableItems[x]["CraftAmount"]) + "\n" )
+            
+            addspacer()
+            CraftWhatInput = raw_input("What would you like to craft? " + makeboldedtext("(Enter Full Name)") + "\nCraft: ")
+
+            if CraftWhatInput.lower() in CraftableItems:
+                CraftAmount = CraftableItems[CraftWhatInput.lower()]["CraftAmount"]
+
+                addspacer()
+                HowManyToCraft = raw_input("How many would you like to craft?\nAmount: ")
+
+                if is_number(HowManyToCraft) == True and CraftAmount >= int(HowManyToCraft):
+
+                    for x in CraftingRecipies[CraftWhatInput.lower()]:
+                        RemoveItemFromInventory(x, CraftingRecipies[CraftWhatInput.lower()][x] * int(HowManyToCraft))
+                    
+                    AddPresetToInventory(CraftWhatInput.lower(), int(HowManyToCraft))
+
+                    IndentAway()
+                    print("x" + str(HowManyToCraft) + " " + CraftWhatInput + " Was added to inventory")
+                    time.sleep(3.25)
+                    BaseDecide()
+
+                elif CraftAmount < HowManyToCraft:
+                    CraftAsMany = raw_input("You cannot craft this many? would you like to craft as many as you can?\n(Yes/No): ")
+
+                    if CraftAsMany.lower() == "yes":
+                        addspacer()
+
+                        for x in CraftingRecipies[CraftWhatInput.lower()].keys():
+                            RemoveItemFromInventory(x, CraftingRecipies[CraftWhatInput.lower()][x] * int(HowManyToCraft))
+
+                        
+                        
+                        AddPresetToInventory(CraftWhatInput.lower(), int(CraftAmount))
+
+                        IndentAway()
+                        print("x" + str(CraftAmount) + " " + str(CraftWhatInput) + " Was added to inventory")
+                        time.sleep(3.25)
+                        BaseDecide()
+
+
+                    else:
+                        BaseDecide()
+
+                else:
+                    IndentAway()
+                    ContInput = raw_input("This is not a valid input\nenter anything to contiune: ")
+            
+                    if ContInput or ContInput == None or ContInput == "":
+                        BaseDecide()
+
+            else:
+                ContInput = raw_input("This is not a valid input\nenter anything to contiune: ")
+            
+                if ContInput or ContInput == None or ContInput == "":
+                    BaseDecide()
+
+        else:
+            IndentAway()
+            ContInput = raw_input("You cannot craft anything\nenter anything to contiune: ")
+            
+            if ContInput or ContInput == None or ContInput == "":
+                BaseDecide()
+        
+
+    else: 
+        print("Command not valid, try again")
+        time.sleep(1.25)
+
+        BaseDecide()
+
+
+#Does the startsequence
+#StartSequence()
+BaseDecide()
+
