@@ -7,7 +7,7 @@ This game is still under develompent
 This game is meant to have an old-style
 The code is really messy tbh
 
-  it was made with python
+  it was made with python 2.7.16 btw
   
 --<Usage>--
   
