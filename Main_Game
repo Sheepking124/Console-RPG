@@ -58,7 +58,7 @@ MaxPlayerHealth = 100
 PlayerHealth = 100
 PlayerHealAmnt = 13
 PlayerHealItems = 0
-PlayerCoinAmnt = 1220
+PlayerCoinAmnt = 0
 
 PlayerMainWeapon = "starter sword"
 
@@ -70,31 +70,35 @@ PlayerArmor = {
     "Boots" : None
 }
 
+#Player Inventory
 PlayerInventory = {
-    "grain" : {"SellPrice" : 7, "Amount" : 30},
-    "rock" : {"SellPrice" : 6, "Amount" : 10},
-    "stone sword" : {"SellPrice" : 65, "Amount" : 5, "Equippable" : True, "Weapon" : True}
+
 }
 
-#locations
-Locations = {
-    "grain town" : {"shop" : [], "farm" : "ye" }
-}
-
+#Crafting Recipies
 CraftingRecipies = {
     "bread" : {"grain" : 3},
-    "stone sword" : {"rock" : 5, "wood" : 2}
+    "stone sword" : {"rock" : 5, "wood" : 2},
+    "hardened blue slime" : {"blue slime" : 2, "rock" : 1},
+    "hardened slime sword" : {"hardened blue slime" : 20, "wood" : 2},
+    "poisoned basic sword" ; {"basic sword" : 1, "poison gland" : 3}
 }
 
+#Crafting Item Descriptions
 CraftingItemDescriptions = {
     "bread" : "Just some regular bread, heals health when consumed",
-    "stone sword" : "A slightly better sword, made out of stone!"
+    "stone sword" : "A slightly better sword, made out of stone!",
+    "hardened slime sword" : "A sword made of blue slime. It seems to be alive and aware of its surroundings. Weird.",
+    "poisoned basic sword" : "A basic sword with poison lathered on it, inflicting poision damage on your enemies",
+    "hardened blue slime" : "a slime hard enough to make tools with"
 }
 
+#Consumable items (WIP)
 ConsumableItems = {
     "bread" : {"HealAmnt" : 8}
 }
 
+#The preset items the player can have (as of now they're the only items)
 PresetItems = {
     #Misc
     "grain" : {"SellPrice" : 7, "Amount" : 1},
@@ -107,14 +111,19 @@ PresetItems = {
     "weathered chestplate" : {"SellPrice" : 400, "Amount" : 1, "Equippable" : True, "Armor" : True, "Chestplate" : True},
 
     #Weapons
-    "basic sword" : {"SellPrice" : 85, "Amount" : 1, "Equippable" : True, "Weapon" : True},
     "starter sword" : {"SellPrice" : 7, "Amount" : 1, "Equippable" : True, "Weapon" : True},
+    "basic sword" : {"SellPrice" : 85, "Amount" : 1, "Equippable" : True, "Weapon" : True},
     "stone sword" : {"SellPrice" : 65, "Amount" : 1, "Equippable" : True, "Weapon" : True},
-    "basic troll axe" : {"SellPrice" : 145, "Amount" : 1, "Equippable" : True, "Weapon" : True},
+    "basic troll axe" : {"SellPrice" : 400, "Amount" : 1, "Equippable" : True, "Weapon" : True},
+    "hardened slime sword" : {"SellPrice" : 185, "Amount" : 1, "Equippable" : True, "Weapon" : True},
+    "poisoned basic sword" : {"SellPrice" : 245, "Amount" : 1, "Equippable" : True, "Weapon" : True},
 
     #Items
     "goblin purse" : {"SellPrice" : 185, "Amount" : 1},
-    "bread" : {"SellPrice" : 25, "Amount" : 1}
+    "bread" : {"SellPrice" : 25, "Amount" : 1},
+    "blue slime" : {"SellPrice" : 6, "Amount" : 1},
+    "poison gland" : {"SellPrice" : 38, "Amount" : 1},
+    "hardened blue slime" {"SellPrice" : 19, "Amount" : 1}
 }
 
 #weapons
@@ -122,10 +131,12 @@ Weapons = {
     "starter sword" : {"Damage" : 10},
     "basic sword" : {"Damage" : 16},
     "basic troll axe" : {"Damage" : 21},
-    "stone sword" : {"Damage" : 13}
+    "stone sword" : {"Damage" : 13},
+    "hardened slime sword" : {"Damage" : 19, "anti-decieve" : True},
+    "poisoned basic sword" : {"Damage" : 16, "poisoning" : True, "poison_amount" : 4}
 }
 
-#armor
+#armor pieces with the damage reduce info
 Armor = {
     "trashed helmet" : {"Reduce" : 2},
     "basic goblin boots" : {"Reduce" : 4},
@@ -135,13 +146,20 @@ Armor = {
 
 #Shops
 GrainTownShop = {
-"basic sword" : {"Description" : "A basic sword made of a polished rock", "BuyPrice" : 250, "Amount" : 1},
-"grain" : {"Description" : "Some grains harvested from this very town", "BuyPrice" : 9, "Amount" : 42},
-"wood" : {"Description" : "Wood chooped from a local tree", "BuyPrice" : 13, "Amount" : 29},
-"trashed helmet" : {"Description" : "A low-quality helmet, at least its something though. Reduces 3 damage when hit.", "BuyPrice" : 155, "Amount" : 1}
+    "basic sword" : {"Description" : "A basic sword made of a polished rock", "BuyPrice" : 250, "Amount" : 1},
+    "grain" : {"Description" : "Some grains harvested from this very town", "BuyPrice" : 9, "Amount" : 32},
+    "wood" : {"Description" : "Wood chooped from a local tree", "BuyPrice" : 13, "Amount" : 19},
+    "trashed helmet" : {"Description" : "A low-quality helmet, at least its something though. Reduces 3 damage when hit.", "BuyPrice" : 155, "Amount" : 1}
+}
+
+KnownLocations = {
+    "grain town" : True,
+    "grain town cave" : False
 }
 
 #--<Quests>--#
+
+#The grain town quest completion
 GrainTownQuest1Completed = False
 
 GrainTownQuest2Part1Complete = False
@@ -149,6 +167,8 @@ GrainTownQuest2Complete = False
 
 GrainTownQuest3Part1Complete = False
 GrainTownQuest3Complete = False
+
+
 
 def Play_Grain_Town_Quest_1():
     global PlayerHealItems
@@ -505,6 +525,23 @@ def Play_Grain_Town_Quest_3():
         else:
             BaseDecide()
 
+def Play_Grain_Town_Quest_4():
+    Dialoug = ["You are sitting in an open field...", "You begin to hear footsteps behind you", "They become louder and louder, and when you look, you see a villager approaching you", "You walk towards them, and they say...", "addspacer", makeboldedtext("Villager: ") + "The mayor had me looking all over for you", makeboldedtext("Villager: ") + "He wants you to meet him near the town hall, follow me", "addspacer", "You follow the villager to the town hall, and when you arrive, you see a group of people talking with the mayor", "addspacer"]
+
+    for x in Dialoug:
+        if x not "addspacer":
+            print(x)
+
+            #gets the time it needs to wait
+            WaitNum = 0
+            for Letter in x:
+                WaitNum += 1
+            WaitNum = WaitNum / 17.5
+            #waits the amount of time
+            time.sleep(WaitNum)
+
+        elif x == "addspacer":
+            addspacer()
 
 #--<End of quests>--#
 
@@ -571,8 +608,7 @@ def RemoveItemFromInventory(ItemName, AmountRemove):
         del PlayerInventory[ItemName]
     
 #Creates an enemy and prompts user to fight them
-def MakeEnemy(Name, Health, Damage, Regen, HealItems, DropStuff):
-
+def MakeEnemy(Name, EnemyHealth, Damage, Regen, HealItems, DropStuff, Bonus={}):
     global PlayerMainWeapon
     global PlayerHealth
     global PlayerHealItems
@@ -580,11 +616,135 @@ def MakeEnemy(Name, Health, Damage, Regen, HealItems, DropStuff):
     global PlayerCoinAmnt
     global PlayerInventory
     global PlayerArmor
-    Totalhealth = Health
+
+    global Health
+    Health = EnemyHealth
 
     IndentAway()
 
-    def DoEnemyMove(Name, Health, Damage, Regen, HealItems, DropStuff):
+    def CheckEnemyHealth(attack, JustDead=False):
+        global PlayerMainWeapon
+        global PlayerHealth
+        global PlayerHealItems
+        global PlayerHealAmnt
+        global PlayerCoinAmnt
+        global PlayerInventory
+        global PlayerArmor
+
+        if Health > 0 and MissChance != 4 and JustDead == False:
+            addspacer()
+            print("You attacked " + makeboldedtext(Name) + " for " + makeboldedtext(attack) + " damage! It now has " + makeboldedtext(Health) + " HP")
+            PoisonPlayer(True)
+            PoisonEnemy()
+
+            #waits then
+            time.sleep(2)
+            #Makes enemy do its move
+            if Health > 0:
+                DoEnemyMove(Name, Health, Damage, Regen, HealItems, DropStuff, Bonus)
+
+        elif Health <= 0:
+            addspacer()
+            print("You killed " + str(Name) + " with the final blow doing " + str(attack) + " damage!")
+            time.sleep(2.5)
+
+            IndentAway()
+            print(makeboldedtext("Dropped Items:"))
+            addspacer()
+
+            if "DropCoins" in DropStuff:
+                print(makeboldedtext("x" + str(DropStuff["DropCoins"])) + " Coins")
+                PlayerCoinAmnt += DropStuff["DropCoins"]
+
+            if "DropItems" in DropStuff:
+                for x in DropStuff["DropItems"].keys():
+                    print(makeboldedtext("x" + str(DropStuff["DropItems"][x])) + " " + str(x))
+                    AddPresetToInventory(x, DropStuff["DropItems"][x] )
+
+            if not "DropItems" in DropStuff and not "DropCoins" in DropStuff:
+                print(makeboldedtext("Nothing"))
+
+            time.sleep(2)
+
+            SplitChance = random.randint(1,3)
+            print(SplitChance)
+            if "splitting" in Bonus and SplitChance == 3:
+                IndentAway()
+                print("The enemy split into another enemy, get ready to fight... again.")
+                time.sleep(3)
+
+                del Bonus["splitting"]
+                MakeEnemy("Weak " + Name, 10, 5, 0, 0, {}, Bonus)
+
+    def PoisonPlayer(AltMsg=False):
+        global DealPlayerDamage
+        global PlayerHealth
+
+        if "poisoning" in Bonus:
+            PoisonChance = random.randint(1,3)
+            PoisonDamage = 0
+
+            if "poison_amount" not in Bonus:
+                PoisonDamage = 4
+            else:
+                PoisonDamage = Bonus["poison_amount"]
+
+            if PoisonChance == 3:
+                time.sleep(3)
+                if AltMsg == False:
+                    print("The poison kicks in and does " + str(PoisonDamage) + " Damage")
+                else:
+                    print("The Spider sprays poison at you, dealing " + str(PoisonDamage) + " Damage")
+                    time.sleep(2)
+                    print("You now have " + str(PlayerHealth) + " Health")
+
+                DealPlayerDamage(PoisonDamage)
+                time.sleep(2)
+
+    def PoisonEnemy(AltMsg=False):
+        global DealPlayerDamage
+        global PlayerHealth
+        global PlayerMainWeapon
+        global Health
+
+        if "poisoning" in Weapons[PlayerMainWeapon]:
+            PoisonChance = random.randint(1,3)
+            PoisonDamage = 0
+
+            if "poison_amount" not in Weapons[PlayerMainWeapon]:
+                PoisonDamage = 4
+          
+            else:
+                PoisonDamage = Weapons[PlayerMainWeapon]["poison_amount"]
+
+            if PoisonChance == 3:
+                time.sleep(3)
+
+                if AltMsg == False:
+                    print("The poison damages the enemy and does " + str(PoisonDamage) + " Damage")
+                    time.sleep(2)
+
+                    if "poisoning" in Bonus:
+                        print("Although the enemy is immune to poison damage, so it didn't take any damage")
+                        time.sleep(2)
+
+                else:
+                    print("The Sword sprays poison at the enemy, dealing " + str(PoisonDamage) + " Damage")
+                    time.sleep(2)
+
+                    if not "poisoning" in Bonus:
+                        print("The enemy now has " + str(Health) + " Health")
+                        time.sleep(2)
+
+                    if "poisoning" in Bonus:
+                        print("Although the enemy is immune to poison damage, so it didn't take any damage")
+                        time.sleep(2)
+
+                if not "poisoning" in Bonus:
+                    Health -= PoisonDamage
+                    CheckEnemyHealth(PoisonDamage, True)
+
+    def DoEnemyMove(Name, Health, Damage, Regen, HealItems, DropStuff, Bonus={}):
         HealChanceAmnt = random.randint(1,2)
 
         #Heals if low health, and player high health
@@ -595,14 +755,14 @@ def MakeEnemy(Name, Health, Damage, Regen, HealItems, DropStuff):
 
             #Says and applies
             Health += Regenamnt
+            addspacer()
             print(str(Name) + " Has decided to heal, regaining " + makeboldedtext(Regenamnt) + " Health, and having a total of " + makeboldedtext(Health) + " Health")
             
             time.sleep(2)
             #adds spacer and makes enemy
             addspacer()
-            MakeEnemy(Name, Health, Damage, Regen, HealItems, DropStuff)
+            MakeEnemy(Name, Health, Damage, Regen, HealItems, DropStuff, Bonus)
             
-        
         #if player health low enough and enemy health low it goes for a final blow
         elif Health <= 8 and PlayerHealth <= Damage:
             #Gets damage amount
@@ -623,13 +783,17 @@ def MakeEnemy(Name, Health, Damage, Regen, HealItems, DropStuff):
 
             #Says and applies
             DealPlayerDamage(DamageAmnt)
+            addspacer()
             print(str(Name) + " Has decided to fight back, dealing " + makeboldedtext(DisplayDamage) + " Damage, Which leaves you a total of " + makeboldedtext(PlayerHealth) + " Health")
+            PoisonPlayer()
+            PoisonEnemy(True)
 
             time.sleep(2)
             #adds spacer and makes enemy
             addspacer()
-            MakeEnemy(Name, Health, Damage, Regen, HealItems, DropStuff)
+            MakeEnemy(Name, Health, Damage, Regen, HealItems, DropStuff, Bonus)
 
+        #Regular attack
         elif Health >= 8 or Health <= 8 and PlayerHealth >= Damage and HealItems <= 0 or Health <= 8 and PlayerHealth >= Damage and  HealChanceAmnt != 1 :
             #Gets damage amount
             DamageAmnt = random.randint(Damage-5, Damage+5)
@@ -649,12 +813,17 @@ def MakeEnemy(Name, Health, Damage, Regen, HealItems, DropStuff):
 
             #Says and applies
             DealPlayerDamage(DamageAmnt)
+            addspacer()
             print(str(Name) + " Has decided to fight back, dealing " + makeboldedtext(DisplayDamage) + " Damage, Which leaves you a total of " + makeboldedtext(PlayerHealth) + " Health")
+            
+            #Runs the poision thing, so if the enemy poisons it does posinon damage
+            PoisonPlayer()
+            PoisonEnemy(True)
 
-            time.sleep(2)
+            time.sleep(3.25)
             #adds spacer and makes enemy
             addspacer()
-            MakeEnemy(Name, Health, Damage, Regen, HealItems, DropStuff)
+            MakeEnemy(Name, Health, Damage, Regen, HealItems, DropStuff, Bonus)
 
     print("<--Actions:-->\n1. Fight\n2. Run\n3. Heal\n4. Stats\n<------------>")
     FightAction = raw_input(makeboldedtext(Name) +" is ready to fight, Choose your action: ")
@@ -669,7 +838,8 @@ def MakeEnemy(Name, Health, Damage, Regen, HealItems, DropStuff):
             time.sleep(1)
 
             #Makes enemy do its move
-            DoEnemyMove(Name, Totalhealth, Damage, Regen, HealItems, DropStuff)
+            if Health > 0:
+                DoEnemyMove(Name, Health, Damage, Regen, HealItems, DropStuff, Bonus)
 
         else:
             addspacer()
@@ -678,39 +848,42 @@ def MakeEnemy(Name, Health, Damage, Regen, HealItems, DropStuff):
 
     elif str(FightAction.lower()) == "fight" or str(FightAction.lower()) == "1": 
     
+        MissChance = 1
+        DecieveChance = 5
+
+        if "decievechance" in Bonus:
+            DecieveChance = Bonus["decievechance"]
+
         #generates and deals damage
-        attack = random.randint( Weapons[PlayerMainWeapon]["Damage"] - 5,Weapons[PlayerMainWeapon]["Damage"] + 5)
-        Totalhealth -= attack
+        if "deceptive" in Bonus:
+            MissChance = random.randint(1,DecieveChance)
 
-        if Totalhealth > 0:
+        if MissChance != DecieveChance:
+            attack = random.randint( Weapons[PlayerMainWeapon]["Damage"] - 5,Weapons[PlayerMainWeapon]["Damage"] + 5)
+            Health -= attack
+        
+        elif "anti-decieve" not in Weapons[PlayerMainWeapon]:
             addspacer()
-            print("You attacked " + makeboldedtext(Name) + " for " + makeboldedtext(attack) + " damage! It now has " + makeboldedtext(Totalhealth) + " HP")
-
-            #waits then
-            time.sleep(2)
-            #Makes enemy do its move
-            DoEnemyMove(Name, Totalhealth, Damage, Regen, HealItems, DropStuff)
-
-        elif Totalhealth <= 0:
-            addspacer()
-            print("You killed " + str(Name) + " with the final blow doing " + str(attack) + " damage!")
+            print("The " + Name + " Decieves you, making you miss your attack")
             time.sleep(2.5)
 
-            IndentAway()
-            print(makeboldedtext("Dropped Items:"))
+            if Health > 0:
+                DoEnemyMove(Name, Health, Damage, Regen, HealItems, DropStuff, Bonus)
+
+        elif "anti-decieve" in Weapons[PlayerMainWeapon]:
+
             addspacer()
+            print("The " + Name + " Decieves you, making you miss your attack")
+            time.sleep(2.5)
 
-            if "DropCoins" in DropStuff:
-                print(makeboldedtext("x" + str(DropStuff["DropCoins"])) + " Coins")
-                PlayerCoinAmnt += DropStuff["DropCoins"]
+            print("But your " + PlayerMainWeapon + "'s anti-decieve ability makes it spring up and slash the enemy")
+            time.sleep(3.5)
 
-            if "DropItems" in DropStuff:
-                for x in DropStuff["DropItems"].keys():
-                    print(makeboldedtext("x" + str(DropStuff["DropItems"][x])) + " " + str(x))
-                    AddPresetToInventory(x, DropStuff["DropItems"][x] )
+            attack = random.randint(Weapons[PlayerMainWeapon]["Damage"] - 5,Weapons[PlayerMainWeapon]["Damage"] + 5)
+            Health -= attack
 
-            time.sleep(2)
-    
+        CheckEnemyHealth(attack)
+        
     elif str(FightAction.lower()) == "heal" or str(FightAction.lower()) == "3":
         #genereates and heals health
         healamnt = random.randint(PlayerHealAmnt, PlayerHealAmnt + 5)
@@ -722,12 +895,12 @@ def MakeEnemy(Name, Health, Damage, Regen, HealItems, DropStuff):
             print("You have healed " + makeboldedtext(healamnt) + " Health, with a total of " + makeboldedtext(PlayerHealth) )
             time.sleep(2)
 
-            MakeEnemy(Name, Totalhealth, Damage, Regen, HealItems, DropStuff)
+            MakeEnemy(Name, Health, Damage, Regen, HealItems, DropStuff)
         else: 
             print("You do not have any healing items to use")
             time.sleep(2)
 
-            MakeEnemy(Name, Totalhealth, Damage, Regen, HealItems, DropStuff)
+            MakeEnemy(Name, Health, Damage, Regen, HealItems, DropStuff)
 
     elif str(FightAction.lower()) == "stats" or str(FightAction.lower()) == "4":
         global PlayerMainWeapon
@@ -742,9 +915,9 @@ def MakeEnemy(Name, Health, Damage, Regen, HealItems, DropStuff):
         ContinueInput = raw_input("Enter anything to continue: ")
 
         if ContinueInput:
-            MakeEnemy(Name, Totalhealth, Damage, Regen, HealItems, DropStuff)
+            MakeEnemy(Name, Health, Damage, Regen, HealItems, DropStuff)
         else: 
-            MakeEnemy(Name, Totalhealth, Damage, Regen, HealItems, DropStuff)
+            MakeEnemy(Name, Health, Damage, Regen, HealItems, DropStuff)
 
     #If option was invalid
     else: 
@@ -834,10 +1007,21 @@ def BaseDecide():
     global CraftingRecipies
     IndentAway()
 
-    print(makeboldedtext("<--Actions:-->") + "\n1. Inventory\n2. Stats\n3. Wander\n4. Shop\n5. Equip\n6. Quest\n7. Heal\n8. Craft\n<------------>")
+    #The numbers for the action
+    DoNumbers = {"inventory" : "1", "stats" : "2", "wander" : "3", "shop" : "4", "equip" : "5", "quest" : "6", "heal" : "7", "craft" : "8", "travel" : "9"}
+
+    #Prints out the actions
+    if PlayerLocation.lower() == "grain town":
+        print(makeboldedtext("<--Actions:-->") + "\n1. Inventory\n2. Stats\n3. Wander\n4. Shop\n5. Equip\n6. Quest\n7. Heal\n8. Craft\n9. Travel\n<------------>")
+        DoNumbers = {"inventory" : "1", "stats" : "2", "wander" : "3", "shop" : "4", "equip" : "5", "quest" : "6", "heal" : "7", "craft" : "8", "travel" : "9"}
+
+    elif PlayerLocation.lower() == "grain town cave":
+       print(makeboldedtext("<--Actions:-->") + "\n1. Inventory\n2. Stats\n3. Equip\n4. Wander\n5. Craft\n6. Heal\n7. Travel\n<------------>")
+       DoNumbers = {"inventory" : "1", "stats" : "2", "wander" : "4", "shop" : None, "equip" : "3", "quest" : None, "heal" : "6", "craft" : "5", "travel" : "7"}
+
     PlayerAction = raw_input("You are in " + PlayerLocation + ", What would you like to do? \nAction: ")
 
-    if PlayerAction.lower() == "inventory" or PlayerAction == "1":
+    if PlayerAction.lower() == "inventory" or PlayerAction == DoNumbers["inventory"]:
         addspacer()
         IndentAway()
         print(makeboldedtext("Inventory:"))
@@ -860,7 +1044,7 @@ def BaseDecide():
         else:
             BaseDecide()
 
-    elif PlayerAction.lower() == "stats" or PlayerAction == "2":
+    elif PlayerAction.lower() == "stats" or PlayerAction == DoNumbers["stats"]:
         global PlayerMainWeapon
         global PlayerCoinAmnt
         global PlayerHealth
@@ -876,11 +1060,22 @@ def BaseDecide():
         else: 
             BaseDecide()
 
-    elif PlayerAction.lower() == "wander" or PlayerAction == "3":
-
+    elif PlayerAction.lower() == "wander" or PlayerAction == DoNumbers["wander"]:
         global PlayerCoinAmnt
 
+        #If the player is in grain town it will randomly do one of four things
         if PlayerLocation == "grain town":
+            
+            def DoNothing():
+                #prints out a random irrelevant event and does nothing for the player
+                otherthings = ["although you saw a rock shaped like a hat", "but you did see a cool bird", "but you did have a fun time", "although there was a nice breeze outside", "althugh you got bit by an ant", "but you saw a neat bug"]
+                otherthingnum = random.randint(0,len(otherthings)-1)
+
+                print("You found nothing, " + str(otherthings[otherthingnum]))
+                time.sleep(3.5)
+
+                BaseDecide()
+
             DoWhatNum = random.randint(1,39)
             genchances = {"Enemy" : range(1,26), "Item" : range(25,36), "Nothing" : range(35,37),  "Coins" : range(36,39)}
 
@@ -941,14 +1136,7 @@ def BaseDecide():
                 BaseDecide()
 
             elif DoWhatNum in genchances["Nothing"]:
-                #prints out a random irrelevant event and does nothing for the player
-                otherthings = ["although you saw a rock shaped like a hat", "but you did see a cool bird", "but you did have a fun time", "although there was a nice breeze outside", "althugh you got bit by an ant", "but you saw a neat bug"]
-                otherthingnum = random.randint(0,len(otherthings)-1)
-
-                print("You found nothing, " + str(otherthings[otherthingnum]))
-                time.sleep(3.5)
-
-                BaseDecide()
+                DoNothing()
             
             elif DoWhatNum in genchances["Item"]:
                 #Gives player an item
@@ -974,12 +1162,50 @@ def BaseDecide():
 
                 BaseDecide()
 
+        elif PlayerLocation.lower() == "grain town cave":
+            DoWhatNum = random.randint(1,25)
+            genchances = {"Enemy" : range(1,26), "Item" : range(25,36), "Nothing" : range(35,37),  "Coins" : range(36,39)}
+
+            if DoWhatNum in genchances["Enemy"]:
+                #makes goblin enemy with more random stats
+                Enemies = ["Deceptive Cave Slime", "Poisoning Spider", "Grain Goblin", "Axe-Weilding Troll"]
+                EnemyGen = random.randint(1,2)
+
+                print("You found a " + makeboldedtext(Enemies[EnemyGen - 1]) + ", prepare to fight!")
+                time.sleep(1.5)
+
+                #Deceptive Cave Slime
+                if EnemyGen == 1:
+                    MakeEnemy("Deceptive Cave Slime", random.randint(30,45), random.randint(13, 15), random.randint(8, 13), random.randint(0,2), {"DropCoins" : random.randint(30 , 45), "DropItems" : {"blue slime" : random.randint(8,12)} }, {"deceptive" : True, "decievechance" : 4, "splitting" : True})
+                    BaseDecide()
+
+                #Spider
+                elif EnemyGen == 2:
+                    MakeEnemy("Poisoning Spider", random.randint(20,30), random.randint(5,15), random.randint(4, 6), random.randint(0,0), {"DropCoins" : random.randint(4,13), "DropItems" : {"poison gland"} : 1 }, {"poisoning" : True, "poison_amount" : 4})
+                    BaseDecide()
+
+                #grain goblin
+                elif EnemyGen == 3:
+                    MakeEnemy("Grain Goblin", random.randint(5,10), random.randint(20, 28), random.randint(5, 10), random.randint(0,2), {"DropCoins" : random.randint(10,25), "DropItems" : {"Grain" : random.randint(2,4) }} )
+                    BaseDecide()
+
+                #axe-weilding troll
+                elif EnemyGen == 4:
+                    AxeWeildingGen = random.randint(1,12)
+                    print(AxeWeildingGen)
+                    if AxeWeildingGen != 12:
+                        MakeEnemy("Axe-Weilding Troll", random.randint(15,30), random.randint(25, 30), random.randint(5, 10), 0, {"DropCoins" : random.randint(30 , 60), "DropItems" : {"Wood" : random.randint(3,5)} })
+                        BaseDecide()
+                    else:
+                        MakeEnemy("Rare Axe-Weilding Troll", random.randint(30,35), random.randint(30, 35), random.randint(5, 10), 1, {"DropCoins" : random.randint(50 , 75), "DropItems" : {"basic troll axe" : 1, "Wood" : random.randint(3,5)} })
+                        BaseDecide()
+
         else:
             print("You cannot wander around here")    
             time.sleep(2)
             BaseDecide()
 
-    elif PlayerAction.lower() == "shop" or PlayerAction == "4":
+    elif PlayerAction.lower() == "shop" or PlayerAction == DoNumbers["shop"]:
         global PlayerCoinAmnt
         global GrainTownShop
         global PlayerInventory
@@ -1232,7 +1458,7 @@ def BaseDecide():
             time.sleep(2)
             BaseDecide()
 
-    elif PlayerAction.lower() == "equip" or PlayerAction == "5":
+    elif PlayerAction.lower() == "equip" or PlayerAction == DoNumbers["equip"]:
         global PlayerInventory
 
         IndentAway()
@@ -1330,7 +1556,8 @@ def BaseDecide():
 
                 BaseDecide()
                         
-    elif PlayerAction.lower() == "quest" or PlayerAction == "6":
+    elif PlayerAction.lower() == "quest" or PlayerAction == DoNumbers["quest"]:
+
         if PlayerLocation == "grain town":
             global GrainTownQuest1Completed
             global GrainTownQuest2Complete
@@ -1357,16 +1584,20 @@ def BaseDecide():
             time.sleep(2)
             BaseDecide()
 
-    elif PlayerAction.lower() == "heal" or PlayerAction == "7":
+    elif PlayerAction.lower() == "heal" or PlayerAction == DoNumbers["heal"]:
+        
+        HealLocations = {"grain town" : True}
 
         global PlayerHealth
         global MaxPlayerHealth
         global PlayerCoinAmnt
         global PlayerHealItems
+        global PlayerLocation
+
         IndentAway()
         HealHow = raw_input("Would you like to use a healing item or go to the medic?\nMedic/item: ")
 
-        if HealHow.lower() == "medic":
+        if HealHow.lower() == "medic" and PlayerLocation.lower() in HealLocations:
             CoinAmnt = MaxPlayerHealth - PlayerHealth
             addspacer()
 
@@ -1429,6 +1660,12 @@ def BaseDecide():
             else:
                 BaseDecide()
         
+        elif HealHow.lower() == "medic" and PlayerLocation.lower() not in HealLocations:
+            addspacer()
+            print("There is no medic around here")
+            time.sleep(3)
+            BaseDecide()
+
         elif HealHow.lower() == "item":
             
             if PlayerHealItems != 0 and PlayerHealth != MaxPlayerHealth:
@@ -1462,15 +1699,33 @@ def BaseDecide():
 
             BaseDecide()
 
-    elif PlayerAction.lower() == "craft" or PlayerAction == "8":
+    elif PlayerAction.lower() == "craft" or PlayerAction == DoNumbers["craft"]:
         CraftableItems = {}
 
         for Item in CraftingRecipies.keys():
+            AmntNum = 0
+            LowestNum = float('inf')
+            CanCraft = False
 
             for Citem in CraftingRecipies[Item].keys():
+                AmntNum += 1
+
                 if Citem in PlayerInventory and CraftingRecipies[Item][Citem] <= PlayerInventory[Citem]["Amount"]:
-                    CraftAmount = float(round( (PlayerInventory[Citem]["Amount"] / CraftingRecipies[Item][Citem])))
-                    CraftableItems[Item] = {"Item" : Item, "CraftAmount" : CraftAmount}
+    
+                    if LowestNum > float(round( (PlayerInventory[Citem]["Amount"] / CraftingRecipies[Item][Citem]))):
+                        LowestNum = float(round( (PlayerInventory[Citem]["Amount"] / CraftingRecipies[Item][Citem])))
+
+                    if AmntNum == len(CraftingRecipies[Item].keys()):
+                        CanCraft = True
+                    
+
+                else:
+                    CanCraft = False
+                    break
+            
+            if CanCraft == True:
+                CraftAmount = LowestNum
+                CraftableItems[Item] = {"Item" : Item, "CraftAmount" : CraftAmount}
                     
 
         if CraftableItems != {}:
@@ -1550,6 +1805,40 @@ def BaseDecide():
             if ContInput or ContInput == None or ContInput == "":
                 BaseDecide()
         
+    elif PlayerAction.lower() == "travel" or PlayerAction == DoNumbers["travel"]:
+        global KnownLocations
+        
+        #Prints out the top part and spacer
+        IndentAway()
+        print(makeboldedtext("Locations:"))
+        addspacer()
+
+        #Prints all the known locations
+        DisplayNumber = 1
+        for x in KnownLocations.keys():
+            #If they know the location it displays that location
+            if KnownLocations[x] == True:
+                print(makeboldedtext(str(DisplayNumber)) + ". " + x)
+                DisplayNumber += 1
+        
+        addspacer()
+        
+        TravelWhereInput = raw_input("Which location would you like to travel to?\nLocation: ")
+
+        #If its a valid location and they know it
+        if TravelWhereInput.lower() in KnownLocations and KnownLocations[TravelWhereInput.lower()] == True:
+            addspacer()
+            print("You traveled to " + makeboldedtext(TravelWhereInput.lower()) + "!")
+            PlayerLocation = TravelWhereInput.lower()
+            time.sleep(3.5)
+            BaseDecide()
+
+        #If they typed a location they dont know or that doesnt exist
+        else:
+            addspacer()
+            print("That location either does not exist, or you do not know how to get there yet.")
+            time.sleep(3.25)
+            BaseDecide()
 
     else: 
         print("Command not valid, try again")
@@ -1561,4 +1850,3 @@ def BaseDecide():
 #Does the startsequence
 #StartSequence()
 BaseDecide()
-
