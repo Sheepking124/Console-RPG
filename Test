@@ -1,0 +1,42 @@
+import time
+
+def makeboldedtext(boldtext):
+    boldtext = "\033[1m" + str(boldtext) + "\033[0m"
+    return boldtext
+
+def is_number(s):
+    try:
+        float(s)
+        return True
+    except ValueError:
+        pass
+ 
+    try:
+        import unicodedata
+        unicodedata.numeric(s)
+        return True
+    except (TypeError, ValueError):
+        pass
+
+def addspacer():
+   print("<------------------->") 
+
+PlayerName = "fartpants"
+
+
+Dialoug = ["You are sitting in an open field...", "You begin to hear footsteps behind you", "They become louder and louder, and when you look, you see a villager approaching you", "You walk towards them, and they say...", "addspacer", makeboldedtext("Villager: ") + "The mayor had me looking all over for you", makeboldedtext("Villager: ") + "He wants you to meet him near the town hall, follow me", "addspacer", "You follow the villager to the town hall, and when you arrive, you see a group of people talking with the mayor", "addspacer", makeboldedtext("Mayor: ") = "Ah, hes finally here, " + PlayerName + ", Im glad to see you!n"]
+
+for x in Dialoug:
+    if x != "addspacer":
+        print(x)
+
+        #gets the time it needs to wait
+        WaitNum = 0
+        for Letter in x:
+            WaitNum += 1
+        WaitNum = WaitNum / 17.5
+        #waits the amount of time
+        time.sleep(WaitNum)
+
+    elif x == "addspacer":
+        addspacer()
