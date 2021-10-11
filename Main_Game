@@ -81,7 +81,7 @@ CraftingRecipies = {
     "stone sword" : {"rock" : 5, "wood" : 2},
     "hardened blue slime" : {"blue slime" : 2, "rock" : 1},
     "hardened slime sword" : {"hardened blue slime" : 20, "wood" : 2},
-    "poisoned basic sword" ; {"basic sword" : 1, "poison gland" : 3}
+    "poisoned basic sword" : {"basic sword" : 1, "poison gland" : 3}
 }
 
 #Crafting Item Descriptions
@@ -123,7 +123,7 @@ PresetItems = {
     "bread" : {"SellPrice" : 25, "Amount" : 1},
     "blue slime" : {"SellPrice" : 6, "Amount" : 1},
     "poison gland" : {"SellPrice" : 38, "Amount" : 1},
-    "hardened blue slime" {"SellPrice" : 19, "Amount" : 1}
+    "hardened blue slime" : {"SellPrice" : 19, "Amount" : 1}
 }
 
 #weapons
@@ -529,7 +529,7 @@ def Play_Grain_Town_Quest_4():
     Dialoug = ["You are sitting in an open field...", "You begin to hear footsteps behind you", "They become louder and louder, and when you look, you see a villager approaching you", "You walk towards them, and they say...", "addspacer", makeboldedtext("Villager: ") + "The mayor had me looking all over for you", makeboldedtext("Villager: ") + "He wants you to meet him near the town hall, follow me", "addspacer", "You follow the villager to the town hall, and when you arrive, you see a group of people talking with the mayor", "addspacer"]
 
     for x in Dialoug:
-        if x not "addspacer":
+        if x != "addspacer":
             print(x)
 
             #gets the time it needs to wait
@@ -1181,7 +1181,7 @@ def BaseDecide():
 
                 #Spider
                 elif EnemyGen == 2:
-                    MakeEnemy("Poisoning Spider", random.randint(20,30), random.randint(5,15), random.randint(4, 6), random.randint(0,0), {"DropCoins" : random.randint(4,13), "DropItems" : {"poison gland"} : 1 }, {"poisoning" : True, "poison_amount" : 4})
+                    MakeEnemy("Poisoning Spider", random.randint(20,30), random.randint(5,15), random.randint(4, 6), random.randint(0,0), {"DropCoins" : random.randint(4,13), "DropItems" : {"poison gland" : 1 }}, {"poisoning" : True, "poison_amount" : 4})
                     BaseDecide()
 
                 #grain goblin
@@ -1850,3 +1850,4 @@ def BaseDecide():
 #Does the startsequence
 #StartSequence()
 BaseDecide()
+
