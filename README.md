@@ -9,12 +9,3 @@
 
   it was made with python 2.7.16 btw
   
-  --<Usage>--
-  
-  Feel free to mod this or add new content (that'd actually be really cool if someone does)
-  Although, do not pass it off as your own, and pls give credit
-  
-  if you do mod/add to this, message me on discord (sheepking186#0699), you dont have to but i'd find it cool and I'd wanna see it because thats cool
-  
-  
- 
